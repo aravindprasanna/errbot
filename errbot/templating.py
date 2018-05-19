@@ -8,7 +8,7 @@ from pathlib import Path
 log = logging.getLogger(__name__)
 
 
-def make_templates_path(root: Path):
+def make_templates_path(root: Path) -> Path:
     return root / 'templates'
 
 
@@ -25,13 +25,9 @@ def tenv():
     return env
 
 
-def make_templates_from_plugin_path(pluginfo_path: Path):
-    return make_templates_path(pluginfo_path.parent)
-
-
 def add_plugin_templates_path(plugin_info: PluginInfo):
     global env
-    tmpl_path = make_templates_from_plugin_path(plugin_info.location)
+    tmpl_path = make_templates_path(plugin_info.location.parent)
     if tmpl_path.exists():
         log.debug("Templates directory found for this plugin [%s]" % tmpl_path)
         tmpl_path = str(tmpl_path)
@@ -45,7 +41,7 @@ def add_plugin_templates_path(plugin_info: PluginInfo):
 
 def remove_plugin_templates_path(plugin_info: PluginInfo):
     global env
-    tmpl_path = make_templates_from_plugin_path(plugin_info.location)
+    tmpl_path = make_templates_path(plugin_info.location.parent)
     if tmpl_path in template_path:
         tmpl_path = str(tmpl_path)
         template_path.remove(tmpl_path)  # for webhooks
